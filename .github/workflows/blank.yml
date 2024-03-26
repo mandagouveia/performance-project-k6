@@ -1,14 +1,22 @@
-name: Basic Workflow
+name: Run with Glob Workflow
 on: [push]
 
 jobs:
-  k6_local_test:
-    name: k6 local test run - basic example
+  run_multiple_tests:
+    name: Run multiple tests with glob patterns
     runs-on: ubuntu-latest
 
-  steps:
-  
-    - name: Run local k6 test
-      uses: grafana/k6-action@v0.2.0
-      with:
-        filename: src/tests/script.js
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install k6 in Ubuntu
+        run: |  
+          sudo gpg -k
+          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install k6
+
+      - name: Run multiple tests
+        run: k6 run src/tests/script.js
