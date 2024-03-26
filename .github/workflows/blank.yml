@@ -1,7 +1,10 @@
-k6_load_test:
+name: Basic Workflow
+on: [push]
 
-  name: k6 Load Test
-  runs-on: ubuntu-latest
+jobs:
+  k6_local_test:
+    name: k6 local test run - basic example
+    runs-on: ubuntu-latest
 
   steps:
     - name: Checkout
